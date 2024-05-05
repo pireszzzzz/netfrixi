@@ -35,6 +35,14 @@ function redirectStep4() {
   window.location.href = "etapa4.html";
 }
 
+function redirectStep5() {
+  window.location.href = "loading.html";
+}
+
+function redirectStep6() {
+  window.location.href = "loading2.html";
+}
+
 function redirectRegistro2() {
   window.location.href = "registro2.html";
 }
@@ -139,28 +147,37 @@ inputCartao?.addEventListener("input", (event) => {
 
 const formatInputTelefone = (input) => {
   const formattedInput = input.value.replace(/\D/g, "").substring(0, 11);
-  const match = formattedInput.match(/^(\d{0,2})(\d{0,5})(\d{0,4})$/);
-  if (match) {
-    let formattedValue = "";
-    if (match[1]) {
-      formattedValue += match[1];
-      if (match[1].length === 2 && input.value.length !== 3) {
-        formattedValue += " ";
+  let formattedValue = "";
+  if (formattedInput.length > 0) {
+    formattedValue += "+" + formattedInput.substring(0, 2) + " ";
+    if (formattedInput.length > 2) {
+      formattedValue += formattedInput.substring(2, 5) + " ";
+      if (formattedInput.length > 5) {
+        formattedValue += formattedInput.substring(5, 8) + " ";
+        if (formattedInput.length > 8) {
+          formattedValue += formattedInput.substring(8);
+        }
       }
     }
-    if (match[2]) {
-      formattedValue += match[2];
-      if (match[2].length === 5 && input.value.length !== 8) {
-        formattedValue += "-";
-      }
-    }
-    if (match[3]) {
-      formattedValue += match[3];
-    }
-    input.value = formattedValue;
-  } else {
-    input.value = formattedInput;
   }
+  input.value = formattedValue;
+
+  input.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Backspace" &&
+      input.selectionStart === input.selectionEnd
+    ) {
+      const cursorPosition = input.selectionStart;
+      if (cursorPosition > 0 && input.value[cursorPosition - 1] === " ") {
+        input.value =
+          input.value.slice(0, cursorPosition - 1) +
+          input.value.slice(cursorPosition);
+        input.selectionStart = cursorPosition - 1;
+        input.selectionEnd = cursorPosition - 1;
+        event.preventDefault();
+      }
+    }
+  });
 };
 
 inputTelefone?.addEventListener("input", (event) => {
